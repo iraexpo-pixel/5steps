@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лестница контента</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0B0C12;
+    color: #F1EFE8;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  
+  /* Шапка */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(241,239,232,0.06);
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #F1EFE8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo .stairs-icon {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+  }
+  .logo .stairs-icon span {
+    display: block;
+    width: 5px;
+    border-radius: 2px;
+  }
+  .logo .stairs-icon span:nth-child(1) { height: 8px; background: #5B6EE8; }
+  .logo .stairs-icon span:nth-child(2) { height: 12px; background: #8A6EE0; }
+  .logo .stairs-icon span:nth-child(3) { height: 16px; background: #C86EC0; }
+  .logo .stairs-icon span:nth-child(4) { height: 20px; background: #E8836E; }
+  .logo .stairs-icon span:nth-child(5) { height: 24px; background: #F0B429; }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #E8836E, #F0B429);
+    color: #0B0C12;
+    font-weight: 700;
+    font-size: 17px;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(240,180,41,0.25);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: #F1EFE8;
+    border: 1px solid rgba(241,239,232,0.15);
+    padding: 14px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s ease;
+  }
+  .btn-ghost:hover { border-color: #F1EFE8; }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    padding: 70px 0 50px;
+    align-items: center;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    line-height: 1.05;
+    margin: 16px 0 20px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: #F0B429;
+    font-weight: 500;
+  }
+  .hero p {
+    font-size: 18px;
+    color: #8B8D9E;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 28px;
+  }
+  .hero .actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .hero .note {
+    font-size: 13px;
+    color: #5A5C6E;
+    margin-top: 16px;
+  }
+
+  .hero-stairs {
+    background: #12131A;
+    border: 1px solid rgba(241,239,232,0.06);
+    border-radius: 16px;
+    padding: 32px 28px 24px;
+  }
+  .hero-stairs .stairs {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 100px;
+    margin-bottom: 16px;
+  }
+  .hero-stairs .stairs .step {
+    flex: 1;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+  }
+  .hero-stairs .stairs .step span {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: #5A5C6E;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .hero-stairs .stairs .s1 { height: 35%; background: #5B6EE8; }
+  .hero-stairs .stairs .s2 { height: 50%; background: #8A6EE0; }
+  .hero-stairs .stairs .s3 { height: 65%; background: #C86EC0; }
+  .hero-stairs .stairs .s4 { height: 80%; background: #E8836E; }
+  .hero-stairs .stairs .s5 { height: 100%; background: #F0B429; }
+  .hero-stairs .caption {
+    color: #5A5C6E;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .hero-stairs .caption b { color: #F1EFE8; }
+
+  /* Блоки */
+  section { padding: 60px 0; border-top: 1px solid rgba(241,239,232,0.06); }
+  .section-head { max-width: 600px; margin-bottom: 36px; }
+  .section-head .tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #F0B429;
+    font-weight: 600;
+  }
+  .section-head h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    margin: 10px 0 12px;
+    line-height: 1.1;
+  }
+  .section-head p {
+    color: #8B8D9E;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: #12131A;
+    border: 1px solid rgba(241,239,232,0.06);
+    border-radius: 14px;
+    padding: 26px 22px;
+  }
+  .card .icon { font-size: 36px; margin-bottom: 12px; }
+  .card h3 { font-family: 'Fraunces', serif; font-size: 18px; margin-bottom: 6px; }
+  .card p { color: #8B8D9E; font-size: 14px; line-height: 1.6; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  .pain-list {
+    list-style: none;
+    padding: 0;
+  }
+  .pain-list li {
+    padding: 12px 0 12px 32px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23E8836E" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>') left center no-repeat;
+    background-size: 20px;
+    color: #F1EFE8;
+    font-size: 15px;
+    border-bottom: 1px solid rgba(241,239,232,0.04);
+  }
+  .pain-list li:last-child { border-bottom: none; }
+
+  .check-list {
+    list-style: none;
+    padding: 0;
+  }
+  .check-list li {
+    padding: 10px 0 10px 34px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="%23F0B429" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>') left center no-repeat;
+    background-size: 22px;
+    color: #F1EFE8;
+    font-size: 15px;
+    border-bottom: 1px solid rgba(241,239,232,0.04);
+  }
+  .check-list li:last-child { border-bottom: none; }
+
+  .price-block {
+    background: linear-gradient(135deg, rgba(240,180,41,0.08), rgba(232,131,110,0.08));
+    border: 1px solid rgba(240,180,41,0.15);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    margin: 40px 0 0;
+  }
+  .price-block .price {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: #F0B429;
+    margin: 6px 0 4px;
+  }
+  .price-block .label {
+    font-size: 14px;
+    color: #8B8D9E;
+    margin-bottom: 22px;
+  }
+  .price-block .sub {
+    font-size: 13px;
+    color: #5A5C6E;
+    margin-top: 14px;
+  }
+
+  .cta-section {
+    text-align: center;
+    padding: 60px 0 80px;
+  }
+  .cta-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    margin-bottom: 12px;
+  }
+  .cta-section p {
+    color: #8B8D9E;
+    font-size: 17px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+  }
+
+  .footer {
+    padding: 30px 0 50px;
+    border-top: 1px solid rgba(241,239,232,0.06);
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #5A5C6E;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ----- НОВЫЙ БЛОК СТУПЕНЕЙ ----- */
+  .steps-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 10px;
+  }
+  .steps-wrapper .step-card {
+    background: #12131A;
+    border: 1px solid rgba(241,239,232,0.06);
+    border-radius: 14px;
+    padding: 22px 20px;
+    border-top: 4px solid #5A5C6E;
+  }
+  .steps-wrapper .step-card .num {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .steps-wrapper .step-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin: 2px 0 4px;
+  }
+  .steps-wrapper .step-card p {
+    color: #8B8D9E;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* 5-я ступень — отдельно, по центру */
+  .step-single {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .step-single .step-card {
+    max-width: 480px;
+    width: 100%;
+    background: #12131A;
+    border: 1px solid rgba(241,239,232,0.06);
+    border-radius: 14px;
+    padding: 22px 20px;
+    border-top: 4px solid #F0B429;
+    text-align: center;
+  }
+  .step-single .step-card .num {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #F0B429;
+  }
+  .step-single .step-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin: 2px 0 4px;
+  }
+  .step-single .step-card p {
+    color: #8B8D9E;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .step-card.s1 { border-top-color: #5B6EE8; }
+  .step-card.s2 { border-top-color: #8A6EE0; }
+  .step-card.s3 { border-top-color: #C86EC0; }
+  .step-card.s4 { border-top-color: #E8836E; }
+  .step-card.s5 { border-top-color: #F0B429; }
+
+  .step-card .num.s1 { color: #5B6EE8; }
+  .step-card .num.s2 { color: #8A6EE0; }
+  .step-card .num.s3 { color: #C86EC0; }
+  .step-card .num.s4 { color: #E8836E; }
+  .step-card .num.s5 { color: #F0B429; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; gap: 30px; padding-top: 40px; }
+    .hero h1 { font-size: 36px; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .price-block .price { font-size: 38px; }
+    .steps-wrapper { grid-template-columns: 1fr; }
+    .step-single .step-card { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="container">
+  <div class="header">
+    <a href="index.html" class="logo">
+      <div class="stairs-icon">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      Лестница контента
+    </a>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="container">
+  <div class="hero">
+    <div>
+      <div style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#F0B429; font-weight:600;">Конструктор бесконечной контент-стратегии</div>
+      <h1>Контент-план, который <em>гарантированно ведёт к продаже</em></h1>
+      <p>Ответьте на 20 вопросов о своём бренде — и получите готовую стратегию постов на 365 дней, выстроенную по Лестнице Ханта.</p>
+      <div class="actions">
+        <a href="payment.html" class="btn-primary">Купить за $7 →</a>
+        <a href="more.html" class="btn-ghost">Как работает</a>
+      </div>
+      <div class="note">≈ 30 минут интервью · результат сразу · доступ навсегда</div>
+    </div>
+    <div class="hero-stairs">
+      <div class="stairs">
+        <div class="step s1"><span>Захват внимания</span></div>
+        <div class="step s2"><span>Прогрев</span></div>
+        <div class="step s3"><span>Доверие</span></div>
+        <div class="step s4"><span>Желание купить</span></div>
+        <div class="step s5"><span>Покупка</span></div>
+      </div>
+      <div class="caption">Каждый день вашего контент-плана стоит на своей ступени. От первого касания до <b>покупки</b>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== БОЛЬ ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Знакомо?</div>
+      <h2>Каждый день одно и то же</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <ul class="pain-list">
+          <li>«Что выложить сегодня? А завтра?» — бесконечная головная боль</li>
+          <li>Выгорание от бессмысленного придумывания постов</li>
+          <li>Нет системы — есть хаос и страх повторяться</li>
+          <li>Не знаете, какой контент ведёт к продажам</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="pain-list">
+          <li>Статистика падает, а вместе с ней — мотивация</li>
+          <li>Посты «в никуда» без стратегии</li>
+          <li>Копируете у других — и чувствуете фальшь</li>
+          <li>Продающие посты — как «фу, опять продажа»</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== РЕШЕНИЕ ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Решение</div>
+      <h2>Контент-стратегия за один вечер</h2>
+      <p>Вы проходите интервью о своём бренде — и получаете готовый контент-план на 365 дней с маркерами экспертности, лояльности и аутентичности.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon">📝</div>
+        <h3>1. Интервью</h3>
+        <p>20 вопросов о вашей экспертизе, ценностях и уникальности.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎯</div>
+        <h3>2. Настройка плана</h3>
+        <p>Выбираете темп прогрева — от быстрого до глубокого.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>3. Готовый план</h3>
+        <p>Таблица с днями, ступенями Ханта и оффером. Скачивайте и работайте.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ЛЕСТНИЦА ХАНТА ===== -->
+<section style="background:#0F1018; border-top:1px solid rgba(241,239,232,0.04); border-bottom:1px solid rgba(241,239,232,0.04);">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Стратегия</div>
+      <h2>Каждый день ведёт к покупке</h2>
+      <p>Контент не хаотичен. Он выстроен по Лестнице Ханта — от первого касания до оффера.</p>
+    </div>
+
+    <div class="steps-wrapper">
+      <div class="step-card s1">
+        <div class="num s1">01</div>
+        <h3>Захват внимания</h3>
+        <p>Привлечение внимания. Личные истории, интерактив, вдохновение.</p>
+      </div>
+      <div class="step-card s2">
+        <div class="num s2">02</div>
+        <h3>Прогрев</h3>
+        <p>Экспертность и ценность. Советы, лайфхаки, разборы.</p>
+      </div>
+      <div class="step-card s3">
+        <div class="num s3">03</div>
+        <h3>Доверие</h3>
+        <p>Аутентичность. Уязвимость, образ жизни, суперспособности.</p>
+      </div>
+      <div class="step-card s4">
+        <div class="num s4">04</div>
+        <h3>Желание купить</h3>
+        <p>Трансформация. Результаты, сверхценности.</p>
+      </div>
+    </div>
+
+    <div class="step-single">
+      <div class="step-card s5">
+        <div class="num s5">05</div>
+        <h3>Покупка</h3>
+        <p>Продажа. Оффер и призыв к действию.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== РЕЗУЛЬТАТ ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Что вы получите</div>
+      <h2>Готовый контент-план на 365 дней</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <ul class="check-list">
+          <li>План на 365 дней</li>
+          <li>Каждый день привязан к ступени Ханта</li>
+          <li>Ваш оффер аккуратно встроен в дни «Покупка»</li>
+          <li>Маркеры экспертности, лояльности и аутентичности в каждом посте</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="check-list">
+          <li>Сценарии постов подобраны под ваш бренд</li>
+          <li>Ценности дня — из ваших ответов</li>
+          <li>Готовая таблица — скачивайте и работайте</li>
+          <li>Больше никаких «что выложить завтра»</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="container">
+    <div style="max-width:700px; margin:0 auto;">
+      <h2>Получите свой контент-план</h2>
+      <p>За 30 минут интервью — готовый план на год вперёд. Доступ навсегда.</p>
+      <div class="price-block">
+        <div class="price">$7</div>
+        <div class="label">Оплата один раз · доступ навсегда</div>
+        <a href="payment.html" class="btn-primary" style="padding:16px 40px; font-size:18px;">Купить и заполнить →</a>
+        <div class="sub">≈ 30 минут на интервью · результат сразу</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div class="container">
+  <div class="footer">
+    <span>Лестница контента — контент-план на 365 дней</span>
+    <span>2025</span>
+  </div>
+</div>
+
+</body>
+</html>
