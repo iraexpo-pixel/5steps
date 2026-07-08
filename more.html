@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Как работает — Лестница контента</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0B0C12;
+    color: #F1EFE8;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(241,239,232,0.06);
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #F1EFE8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo .stairs-icon {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+  }
+  .logo .stairs-icon span {
+    display: block;
+    width: 5px;
+    border-radius: 2px;
+  }
+  .logo .stairs-icon span:nth-child(1) { height: 8px; background: #5B6EE8; }
+  .logo .stairs-icon span:nth-child(2) { height: 12px; background: #8A6EE0; }
+  .logo .stairs-icon span:nth-child(3) { height: 16px; background: #C86EC0; }
+  .logo .stairs-icon span:nth-child(4) { height: 20px; background: #E8836E; }
+  .logo .stairs-icon span:nth-child(5) { height: 24px; background: #F0B429; }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #E8836E, #F0B429);
+    color: #0B0C12;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(240,180,41,0.25);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: #F1EFE8;
+    border: 1px solid rgba(241,239,232,0.15);
+    padding: 12px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s ease;
+  }
+  .btn-ghost:hover { border-color: #F1EFE8; }
+  .btn-sm { padding: 9px 16px; font-size: 13px; }
+
+  .page-head {
+    padding: 50px 0 30px;
+  }
+  .page-head .tag {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #F0B429;
+    font-weight: 600;
+  }
+  .page-head h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    margin: 12px 0 16px;
+    line-height: 1.1;
+  }
+  .page-head p {
+    color: #8B8D9E;
+    font-size: 18px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  section { padding: 50px 0; border-top: 1px solid rgba(241,239,232,0.06); }
+  section:last-of-type { border-bottom: 1px solid rgba(241,239,232,0.06); }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5A5C6E;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    color: #8B8D9E;
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 700px;
+  }
+
+  .ai-block {
+    background: linear-gradient(135deg, rgba(91,110,232,0.04), rgba(240,180,41,0.04));
+    border: 1px solid rgba(240,180,41,0.08);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .ai-block .icon {
+    font-size: 40px;
+    flex-shrink: 0;
+  }
+  .ai-block h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .ai-block p {
+    color: #8B8D9E;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .ai-block strong {
+    color: #F0B429;
+  }
+
+  .structure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .structure-item {
+    background: #1B1D27;
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .structure-item .icon {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .structure-item h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  .structure-item p {
+    color: #8B8D9E;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .day-structure {
+    background: #12131A;
+    border: 1px solid rgba(241,239,232,0.06);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-top: 20px;
+  }
+  .day-structure .example-day {
+    background: #1B1D27;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin: 14px 0 0;
+    font-size: 14px;
+    line-height: 1.8;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #8B8D9E;
+  }
+  .day-structure .example-day .highlight {
+    color: #F0B429;
+  }
+  .day-structure .example-day .label {
+    color: #5A5C6E;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .day-structure .example-day .block {
+    margin: 4px 0;
+    padding-left: 8px;
+    border-left: 2px solid rgba(240,180,41,0.15);
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .step-card {
+    background: #12131A;
+    border: 1px solid rgba(241,239,232,0.06);
+    border-radius: 14px;
+    padding: 24px 22px;
+    border-left: 4px solid #5A5C6E;
+  }
+  .step-card .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #5A5C6E;
+    letter-spacing: 0.05em;
+  }
+  .step-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin: 4px 0 6px;
+  }
+  .step-card p {
+    color: #8B8D9E;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .step-card .example {
+    background: #1B1D27;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #8B8D9E;
+    border-left: 2px solid #F0B429;
+  }
+  .step-card .example strong {
+    color: #F1EFE8;
+  }
+  .step-card.s1 { border-left-color: #5B6EE8; }
+  .step-card.s2 { border-left-color: #8A6EE0; }
+  .step-card.s3 { border-left-color: #C86EC0; }
+  .step-card.s4 { border-left-color: #E8836E; }
+  .step-card.s5 { border-left-color: #F0B429; }
+
+  .intensity-note {
+    background: rgba(240,180,41,0.04);
+    border: 1px solid rgba(240,180,41,0.08);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 24px;
+    color: #8B8D9E;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .intensity-note strong {
+    color: #F0B429;
+  }
+
+  .time-block {
+    background: rgba(232,131,110,0.04);
+    border: 1px solid rgba(232,131,110,0.08);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-top: 20px;
+  }
+  .time-block .big-number {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: #F0B429;
+    line-height: 1;
+    margin-right: 16px;
+  }
+  .time-block .row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .time-block h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .time-block p {
+    color: #8B8D9E;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .time-block strong {
+    color: #E8836E;
+  }
+
+  .innovation-block {
+    background: linear-gradient(135deg, rgba(240,180,41,0.06), rgba(232,131,110,0.06));
+    border: 1px solid rgba(240,180,41,0.12);
+    border-radius: 14px;
+    padding: 32px 30px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .innovation-block .icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .innovation-block h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: #F0B429;
+  }
+  .innovation-block p {
+    color: #8B8D9E;
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .innovation-block strong {
+    color: #F1EFE8;
+  }
+
+  /* ===== FAQ ===== */
+  .faq-item {
+    border-bottom: 1px solid rgba(241,239,232,0.06);
+    padding: 16px 0;
+    cursor: pointer;
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #F1EFE8;
+    transition: color 0.2s ease;
+  }
+  .faq-q:hover { color: #F0B429; }
+  .faq-arrow {
+    color: #5A5C6E;
+    font-size: 14px;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+  .faq-arrow.open { transform: rotate(180deg); }
+  .faq-a {
+    color: #8B8D9E;
+    font-size: 15px;
+    line-height: 1.7;
+    padding-top: 10px;
+    display: none;
+  }
+  .faq-a.open { display: block; }
+
+  .cta-section {
+    text-align: center;
+    padding: 40px 0 20px;
+  }
+  .cta-section .box {
+    background: linear-gradient(135deg, rgba(240,180,41,0.06), rgba(232,131,110,0.06));
+    border: 1px solid rgba(240,180,41,0.10);
+    border-radius: 16px;
+    padding: 40px 32px;
+  }
+  .cta-section .box h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .cta-section .box p {
+    color: #8B8D9E;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #5A5C6E;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 30px;
+    transition: color 0.2s ease;
+  }
+  .back-link:hover { color: #F1EFE8; }
+
+  .footer {
+    padding: 30px 0 50px;
+    border-top: 1px solid rgba(241,239,232,0.06);
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #5A5C6E;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  @media (max-width: 860px) {
+    .steps-grid { grid-template-columns: 1fr; }
+    .structure-grid { grid-template-columns: 1fr; }
+    .page-head h1 { font-size: 32px; }
+    .ai-block { flex-direction: column; align-items: center; text-align: center; }
+    .time-block .row { flex-direction: column; text-align: center; }
+    .faq-q { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="container">
+  <div class="header">
+    <a href="index.html" class="logo">
+      <div class="stairs-icon">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      Лестница контента
+    </a>
+    <div style="display:flex; gap:12px;">
+      <a href="index.html" class="btn-ghost btn-sm">На главную</a>
+      <a href="payment.html" class="btn-primary btn-sm">Купить $7</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== СТРАНИЦА ===== -->
+<div class="container">
+
+  <a href="index.html" class="back-link">← На главную</a>
+
+  <div class="page-head">
+    <div class="tag">Обзор</div>
+    <h1>Как работает <span style="color:#F0B429;">Лестница</span></h1>
+    <p>Интервью с искусственным интеллектом → Настройка → Готовый план. Всё просто.</p>
+  </div>
+
+  <!-- ===== AI БЛОК ===== -->
+  <section>
+    <div class="ai-block">
+      <div class="icon">🧠</div>
+      <div>
+        <h3>Искусственный интеллект проводит интервью</h3>
+        <p>Вы отвечаете на 20 вопросов о своём бренде. <strong>AI анализирует</strong> каждый ответ, выделяет ключевые маркеры экспертности, лояльности и аутентичности. А затем <strong>рандомайзер</strong> распределяет их по дням так, чтобы каждый пост был уникальным и не повторялся.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== СТРУКТУРА ДНЯ ===== -->
+  <section>
+    <div class="section-label">Структура дня</div>
+    <div class="section-title">Как устроен каждый день плана</div>
+    <div class="section-desc">Каждый день — это не просто один пост. Это целая микро-стратегия, где каждый элемент работает на общую цель.</div>
+
+    <div class="structure-grid">
+      <div class="structure-item">
+        <span class="icon">📝</span>
+        <h4>Тема дня</h4>
+        <p>Главная мысль или рубрика, вокруг которой строится весь контент дня.</p>
+      </div>
+      <div class="structure-item">
+        <span class="icon">🎯</span>
+        <h4>4 маркера бренда</h4>
+        <p>Экспертность, Лояльность, Аутентичность и Ценность дня. Каждый маркер — как грань вашей личности.</p>
+      </div>
+      <div class="structure-item">
+        <span class="icon">📹</span>
+        <h4>3 сюжетные линии для сторис</h4>
+        <p>Связаны одной мыслью или углом зрения. Могут раскрывать ценность дня, лояльность, аутентичность или экспертность — вы выбираете.</p>
+      </div>
+      <div class="structure-item">
+        <span class="icon">🧩</span>
+        <h4>Одно касание экспертности</h4>
+        <p>Каждый день вы транслируете свою экспертность — не через прямую продажу, а через смысл, инсайт или личную историю.</p>
+      </div>
+    </div>
+
+    <div class="day-structure">
+      <div style="font-size:13px; color:#5A5C6E; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.05em;">Пример дня из плана</div>
+      <div class="example-day">
+        <div><span class="label">День</span> 1 · Понедельник</div>
+        <div style="margin-top:6px;">✦ <span class="highlight">ТЕМА ВЛОГА:</span> [бонусом позже]</div>
+        <div class="block" style="margin-top:8px;">
+          <div><span class="label">[Лояльность]</span> Долгий успешный брак</div>
+          <div><span class="label">[Аутентичность]</span> Свобода</div>
+          <div><span class="label">[Экспертность]</span> Перестаёт прокрастинировать — начинает действовать</div>
+          <div><span class="label">[Ценность дня]</span> Энергия</div>
+        </div>
+        <div style="margin-top:8px; font-size:13px; color:#5A5C6E;">
+          📹 Сторис: 3 сюжетные линии, связанные темой «Утро» через призму <span class="highlight">Свободы</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ЛОГИКА ПРОГРЕВА ===== -->
+  <section>
+    <div class="section-label">Стратегия прогрева</div>
+    <div class="section-title">Каждый день приближает клиента к покупке</div>
+    <div class="section-desc">Контент-план — это не просто набор постов. Это <strong>логическая структура</strong>, где день за днём вы раскрываете свои грани личности и экспертности в нужной дозировке.</div>
+
+    <div style="margin-top:20px; background:#12131A; border:1px solid rgba(241,239,232,0.06); border-radius:14px; padding:24px 26px;">
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:12px;">
+        <span style="display:inline-block; background:rgba(91,110,232,0.12); color:#5B6EE8; padding:4px 14px; border-radius:100px; font-size:13px;">Захват внимания</span>
+        <span style="display:inline-block; background:rgba(138,110,224,0.12); color:#8A6EE0; padding:4px 14px; border-radius:100px; font-size:13px;">Прогрев</span>
+        <span style="display:inline-block; background:rgba(200,110,192,0.12); color:#C86EC0; padding:4px 14px; border-radius:100px; font-size:13px;">Доверие</span>
+        <span style="display:inline-block; background:rgba(232,131,110,0.12); color:#E8836E; padding:4px 14px; border-radius:100px; font-size:13px;">Желание купить</span>
+        <span style="display:inline-block; background:rgba(240,180,41,0.12); color:#F0B429; padding:4px 14px; border-radius:100px; font-size:13px;">Покупка</span>
+      </div>
+      <p style="color:#8B8D9E; font-size:15px; line-height:1.7;">
+        Вы день за днём подводите подписчика от состояния <strong>«Кто ты?»</strong> до состояния <strong>«Я хочу у тебя купить»</strong>.
+        Каждый пост, каждая сторис — это осмысленный шаг. <strong>Вы сами понимаете, для какой цели</strong> выкладываете именно этот контент именно сегодня.
+      </p>
+      <p style="color:#8B8D9E; font-size:15px; line-height:1.7; margin-top:8px;">
+        <strong style="color:#F0B429;">Хватит стрелять из пушки по воробьям.</strong> Контент-план делает каждый пост осмысленным, а процесс — контролируемым и понятным.
+      </p>
+    </div>
+
+    <div class="intensity-note">
+      <strong>⚡ Интенсивность прохождения клиентом прогрева по Ханту вы выбираете сами.</strong>
+      <span style="display:block; margin-top:4px;">От быстрого (7 дней) до глубокого (30 дней) — вы управляете темпом, в котором подписчик идёт от «захвата внимания» до «покупки».</span>
+    </div>
+  </section>
+
+  <!-- ===== 5 СТУПЕНЕЙ ХАНТА ===== -->
+  <section>
+    <div class="section-label">Ступени</div>
+    <div class="section-title">Лестница Ханта</div>
+
+    <div class="steps-grid">
+      <div class="step-card s1">
+        <div class="num">01</div>
+        <h3>Захват внимания</h3>
+        <p>Привлекаем внимание аудитории. Личные истории, интерактив, вдохновение.</p>
+        <div class="example"><strong>Пример:</strong> «Моя история, которая изменила всё»</div>
+      </div>
+      <div class="step-card s2">
+        <div class="num">02</div>
+        <h3>Прогрев</h3>
+        <p>Показываем экспертность и ценность. Советы, лайфхаки, разборы ошибок.</p>
+        <div class="example"><strong>Пример:</strong> «3 ошибки, которые я вижу у каждого»</div>
+      </div>
+      <div class="step-card s3">
+        <div class="num">03</div>
+        <h3>Доверие</h3>
+        <p>Раскрываем аутентичность. Уязвимость, образ жизни, суперспособности.</p>
+        <div class="example"><strong>Пример:</strong> «Почему я выбрала этот путь»</div>
+      </div>
+      <div class="step-card s4">
+        <div class="num">04</div>
+        <h3>Желание купить</h3>
+        <p>Показываем трансформацию. Результаты клиентов, сверхценности.</p>
+        <div class="example"><strong>Пример:</strong> «Результат, который говорит сам за себя»</div>
+      </div>
+      <div class="step-card s5">
+        <div class="num">05</div>
+        <h3>Покупка</h3>
+        <p>Продажа. Оффер и призыв к действию. Мягко и без давления.</p>
+        <div class="example"><strong>Пример:</strong> «Готова помочь. Вот как это сделать»</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ВРЕМЯ И ВЫГОРАНИЕ ===== -->
+  <section>
+    <div class="section-label">Экономия времени</div>
+    <div class="section-title">Контент — это всего лишь 20%</div>
+
+    <div class="time-block">
+      <div class="row">
+        <span class="big-number">80%</span>
+        <div>
+          <h3>Вы тратите 80% времени на придумывание</h3>
+          <p>А должны тратить на <strong>создание продукта, продажи и обслуживание клиентов</strong>.</p>
+        </div>
+      </div>
+      <p style="margin-top:14px;">
+        Создание контента должно занимать <strong style="color:#F0B429;">не больше 20%</strong> вашего временного бюджета.
+        Но сейчас вы тратите на него <strong style="color:#E8836E;">кучу времени и психического ресурса</strong> — выгораете уже на старте.
+      </p>
+      <p style="margin-top:8px;">
+        <strong style="color:#F0B429;">Лестница контента</strong> возвращает вам время и энергию. Вы перестаёте думать «что выложить завтра» — и начинаете делать то, что действительно важно: <strong>продавать, создавать продукты и расти</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== ИННОВАЦИИ ===== -->
+  <section>
+    <div class="innovation-block">
+      <span class="icon">🚀</span>
+      <h3>Вы прикасаетесь к инновациям</h3>
+      <p>Благодаря этой системе вы будете <strong>на сотню шагов опережать конкурентов</strong> в своей нише. Пока другие придумывают посты вручную — у вас уже готовая стратегия на год вперёд, выстроенная по всем законам маркетинга.</p>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section>
+    <div class="section-label">Частые вопросы</div>
+    <div class="section-title">FAQ</div>
+
+    <div style="display:flex; flex-direction:column; gap:4px; margin-top:16px;">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Сколько времени занимает создание плана?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Интервью из 20 вопросов занимает около 30 минут. После этого план генерируется автоматически — результат готов сразу.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Что я получу на выходе?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Готовый контент-план в формате таблицы. В нём расписаны: день, ступень Ханта, сценарий поста, маркеры экспертности/лояльности/аутентичности, ценность дня и оффер.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Подходит ли это для моего блога?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Да. Система подстраивается под ваши ответы. Вы рассказываете о своей миссии, ценностях, аудитории — и план строится персонально под вас.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Можно ли изменить план после генерации?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Да. Вы можете перегенерировать план с новыми настройками или вручную отредактировать таблицу после скачивания.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Что такое Лестница Ханта?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Это модель прогрева клиента: Захват внимания → Прогрев → Доверие → Желание купить → Покупка. Каждый пост в вашем плане соответствует одной из этих ступеней.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Нужно ли платить после создания плана?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Нет. Вы платите один раз $7 и получаете доступ к плану навсегда.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section" style="border-bottom:none;">
+    <div class="box">
+      <h3>Готовы создать свой план?</h3>
+      <p>30 минут интервью с AI — и у вас есть контент-стратегия на год.</p>
+      <p style="color:#5A5C6E; font-size:14px; margin-bottom:16px;">Цена копеечная — результат бесценный</p>
+      <a href="payment.html" class="btn-primary" style="font-size:17px; padding:14px 40px;">Купить за $7 →</a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <span>Лестница контента — контент-план на 365 дней</span>
+    <span>2025</span>
+  </div>
+
+</div>
+
+<script>
+  function toggleFAQ(el) {
+    const answer = el.nextElementSibling;
+    const arrow = el.querySelector('.faq-arrow');
+    answer.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
